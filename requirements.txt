@@ -1,0 +1,2 @@
+ksef-client
+python-dotenv
