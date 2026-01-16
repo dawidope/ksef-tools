@@ -43,48 +43,53 @@ def main() -> None:
         },
     }
 
-    with KsefClient(KsefClientOptions(base_url=base_url)) as client:
-        certs = client.security.get_public_key_certificates()
-        token_cert = next(c for c in certs if "KsefTokenEncryption" in (c.get("usage") or []))[
-            "certificate"
-        ]
-        
-        print("Authenticating with KSeF token...")
-        access_token = (
-            AuthCoordinator(client.auth)
-            .authenticate_with_ksef_token(
-                token=token,
-                public_certificate=token_cert,
-                context_identifier_type=context_type,
-                context_identifier_value=context_value,
-                max_attempts=90,
-                poll_interval_seconds=2.0,
+    try:
+        with KsefClient(KsefClientOptions(base_url=base_url)) as client:
+            certs = client.security.get_public_key_certificates()
+            token_cert = next(c for c in certs if "KsefTokenEncryption" in (c.get("usage") or []))[
+                "certificate"
+            ]
+            
+            print("Authenticating with KSeF token...")
+            access_token = (
+                AuthCoordinator(client.auth)
+                .authenticate_with_ksef_token(
+                    token=token,
+                    public_certificate=token_cert,
+                    context_identifier_type=context_type,
+                    context_identifier_value=context_value,
+                    max_attempts=90,
+                    poll_interval_seconds=2.0,
+                )
+                .tokens.access_token.token
             )
-            .tokens.access_token.token
-        )
-        
-        print(f"Querying invoices from last {args.days} days...")
-        metadata = client.invoices.query_invoice_metadata(
-            payload,
-            access_token=access_token,
-            page_offset=0,
-            page_size=args.page_size,
-            sort_order="Asc",
-        )
+            
+            print(f"Querying invoices from last {args.days} days...")
+            metadata = client.invoices.query_invoice_metadata(
+                payload,
+                access_token=access_token,
+                page_offset=0,
+                page_size=args.page_size,
+                sort_order="Asc",
+            )
 
-    invoices = metadata.get("invoices") or metadata.get("invoiceList") or []
-    print(f"\n✓ Invoices returned: {len(invoices)}\n")
+        invoices = metadata.get("invoices") or metadata.get("invoiceList") or []
+        print(f"\n✓ Invoices returned: {len(invoices)}\n")
+        
+        for i, invoice in enumerate(invoices, 1):
+            print(f"{i}. Invoice: {invoice.get('invoiceNumber')}")
+            print(f"   KSeF Number: {invoice.get('ksefNumber')}")
+            print(f"   Issue Date: {invoice.get('issueDate')}")
+            print(f"   Seller: {invoice.get('seller', {}).get('name')} (NIP: {invoice.get('seller', {}).get('nip')})")
+            print(f"   Buyer: {invoice.get('buyer', {}).get('name')}")
+            print(f"   Net Amount: {invoice.get('netAmount')} {invoice.get('currency')}")
+            print(f"   Gross Amount: {invoice.get('grossAmount')} {invoice.get('currency')}")
+            print(f"   Hash: {invoice.get('invoiceHash')}")
+            print()
     
-    for i, invoice in enumerate(invoices, 1):
-        print(f"{i}. Invoice: {invoice.get('invoiceNumber')}")
-        print(f"   KSeF Number: {invoice.get('ksefNumber')}")
-        print(f"   Issue Date: {invoice.get('issueDate')}")
-        print(f"   Seller: {invoice.get('seller', {}).get('name')} (NIP: {invoice.get('seller', {}).get('nip')})")
-        print(f"   Buyer: {invoice.get('buyer', {}).get('name')}")
-        print(f"   Net Amount: {invoice.get('netAmount')} {invoice.get('currency')}")
-        print(f"   Gross Amount: {invoice.get('grossAmount')} {invoice.get('currency')}")
-        print(f"   Hash: {invoice.get('invoiceHash')}")
-        print()
+    except Exception as e:
+        print(f"\n✗ Error: {e}")
+        raise SystemExit(1)
 
 
 if __name__ == "__main__":
