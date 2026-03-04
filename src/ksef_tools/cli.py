@@ -12,6 +12,7 @@ from ksef_tools.version import _VERSION
 _COMMANDS = {
     "send": "ksef_tools.commands.send:send_command",
     "list": "ksef_tools.commands.list:list_command",
+    "qr": "ksef_tools.commands.qr:qr_command",
 }
 
 

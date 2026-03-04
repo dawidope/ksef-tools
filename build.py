@@ -37,6 +37,7 @@ def build_exe() -> None:
             "--hidden-import", "ksef_tools.commands",
             "--hidden-import", "ksef_tools.commands.send",
             "--hidden-import", "ksef_tools.commands.list",
+            "--hidden-import", "ksef_tools.commands.qr",
             str(ROOT / "src" / "ksef_tools" / "__main__.py"),
         ],
         cwd=ROOT,

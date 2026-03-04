@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.2.0
+
+### Features
+- `ksef-tools qr <file.xml>` - generate KSeF QR Code I verification link
+- `send` now returns `verification_url` (QR Code I link) in success response
+- Invoice issue date (`P_1`) and hash sourced from XML / KSeF response for correct verification links
+
 ## 0.1.0
 
 Initial release as a CLI tool.

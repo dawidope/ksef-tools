@@ -11,6 +11,7 @@ CLI for the Polish National e-Invoice System (KSeF). Packaged as a single `.exe`
 ```bash
 ksef-tools send invoice.xml
 ksef-tools list --days 30
+ksef-tools qr invoice.xml
 ```
 
 ## Configuration
@@ -47,7 +48,7 @@ Send an invoice XML file to KSeF:
 ksef-tools send <path_to_xml_file>
 ```
 
-Returns JSON with `ksef_number`, `reference_number`, and processing status.
+Returns JSON with `ksef_number`, `reference_number`, `verification_url` (QR Code I link), and processing status.
 
 ### list
 
@@ -58,6 +59,16 @@ ksef-tools list --days 30 --page-size 10
 ```
 
 Returns JSON with invoice metadata.
+
+### qr
+
+Generate a KSeF QR Code I verification link for an invoice:
+
+```bash
+ksef-tools qr <path_to_xml_file> [--nip NIP] [--date YYYY-MM-DD]
+```
+
+Reads the invoice issue date (`P_1`) and seller NIP from config. Returns JSON with `verification_url`.
 
 ## Development
 
