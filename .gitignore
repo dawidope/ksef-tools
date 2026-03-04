@@ -21,5 +21,12 @@ build/
 *.xml
 !example*.xml
 
-# Environment
+# Config (contains secrets)
+config.json
 .env
+
+# Logs
+logs/
+
+# PyInstaller
+*.spec

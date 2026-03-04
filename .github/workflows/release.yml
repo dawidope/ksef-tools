@@ -1,0 +1,46 @@
+name: Build and Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install -e ".[build]"
+
+      - name: Inject version from tag
+        shell: bash
+        run: |
+          VERSION="${GITHUB_REF_NAME#v}"
+          echo "_VERSION = \"$VERSION\"" > src/ksef_tools/version.py
+
+      - name: Build exe
+        run: >
+          python -m PyInstaller
+          --onefile
+          --name ksef-tools
+          --hidden-import ksef_tools.commands
+          --hidden-import ksef_tools.commands.send
+          --hidden-import ksef_tools.commands.list
+          src/ksef_tools/__main__.py
+
+      - name: Verify exe
+        run: dist\ksef-tools.exe --version
+
+      - name: Upload to GitHub Releases
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist/ksef-tools.exe

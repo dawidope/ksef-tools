@@ -1,0 +1,8 @@
+{
+  "ksef_token": "your_token_here",
+  "context_type": "nip",
+  "context_value": "1234567890",
+  "base_url": "https://ksef-demo.mf.gov.pl",
+  "subject_type": "Subject1",
+  "date_type": "Issue"
+}
