@@ -14,7 +14,7 @@ CODE_REFUSED = 30
 
 
 def success(extra: dict[str, Any] | None = None) -> dict[str, Any]:
-    result: dict[str, Any] = {"status": STATUS_SUCCESS, "status_code": CODE_SUCCESS}
+    result: dict[str, Any] = {"status": STATUS_SUCCESS, "statusCode": CODE_SUCCESS}
     if extra:
         result.update(extra)
     return result
@@ -23,7 +23,7 @@ def success(extra: dict[str, Any] | None = None) -> dict[str, Any]:
 def error(message: str, response: Any = None) -> dict[str, Any]:
     return {
         "status": STATUS_ERROR,
-        "status_code": CODE_ERROR,
+        "statusCode": CODE_ERROR,
         "error": message,
         "response": response or {},
     }
@@ -32,7 +32,7 @@ def error(message: str, response: Any = None) -> dict[str, Any]:
 def refused(message: str, response: Any = None) -> dict[str, Any]:
     return {
         "status": STATUS_REFUSED,
-        "status_code": CODE_REFUSED,
+        "statusCode": CODE_REFUSED,
         "error": message,
         "response": response or {},
     }

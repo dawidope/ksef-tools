@@ -79,4 +79,4 @@ def qr_command(ctx: click.Context, invoice_xml_path: Path, nip: str | None, issu
     url = build_verification_url(config.base_url, nip, issue_date_obj, invoice_hash)
 
     logger.info("Verification URL: %s", url)
-    print_json(success({"verification_url": url}))
+    print_json(success({"verificationUrl": url}))

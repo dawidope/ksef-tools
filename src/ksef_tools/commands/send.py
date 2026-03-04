@@ -87,9 +87,7 @@ def send_command(ctx: click.Context, invoice_xml_path: Path) -> None:
                     logger.error("KSeF response: %s", json.dumps(status, ensure_ascii=False, default=str))
                     result = {
                         "status": "REFUSED" if mapped == CODE_REFUSED else "ERROR",
-                        "status_code": mapped,
-                        "ksef_number": None,
-                        "reference_number": invoice_reference,
+                        "statusCode": mapped,
                         "error": msg,
                         "response": status,
                     }
@@ -101,7 +99,7 @@ def send_command(ctx: click.Context, invoice_xml_path: Path) -> None:
                 msg = "Timed out waiting for invoice processing (120s)"
                 logger.error(msg)
                 logger.error("KSeF response: %s", json.dumps(status, ensure_ascii=False, default=str))
-                print_json(error(msg, {"reference_number": invoice_reference, "response": status}))
+                print_json(error(msg, status))
                 return
 
             ksef_number = status.get("ksefNumber")
@@ -126,9 +124,7 @@ def send_command(ctx: click.Context, invoice_xml_path: Path) -> None:
             print_json(
                 success(
                     {
-                        "ksef_number": ksef_number,
-                        "reference_number": invoice_reference,
-                        "verification_url": verification_url,
+                        "verificationUrl": verification_url,
                         "response": status,
                     }
                 )

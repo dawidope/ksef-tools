@@ -1,10 +1,16 @@
 # Changelog
 
+## 0.2.1
+
+### Changes
+- JSON output keys standardized to camelCase (matching KSeF API convention)
+- Removed duplicate `ksefNumber` and `referenceNumber` from `send` wrapper (already present in `response`)
+
 ## 0.2.0
 
 ### Features
 - `ksef-tools qr <file.xml>` - generate KSeF QR Code I verification link
-- `send` now returns `verification_url` (QR Code I link) in success response
+- `send` now returns `verificationUrl` (QR Code I link) in success response
 - Invoice issue date (`P_1`) and hash sourced from XML / KSeF response for correct verification links
 
 ## 0.1.0
