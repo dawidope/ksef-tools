@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import logging
 import sys
-from logging.handlers import TimedRotatingFileHandler
+from datetime import date
 from pathlib import Path
 
 
@@ -21,12 +21,8 @@ def setup_logger(base_dir: Path | None = None) -> logging.Logger:
         return logger
 
     logger.setLevel(logging.DEBUG)
-    handler = TimedRotatingFileHandler(
-        log_dir / "ksef-tools.log",
-        when="midnight",
-        backupCount=30,
-        encoding="utf-8",
-    )
+    log_file = log_dir / f"ksef-tools-{date.today().isoformat()}.log"
+    handler = logging.FileHandler(log_file, encoding="utf-8")
     handler.setFormatter(
         logging.Formatter("%(asctime)s | %(levelname)-8s | %(message)s")
     )
