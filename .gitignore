@@ -31,3 +31,4 @@ logs/
 
 # PyInstaller
 *.spec
+*.exe
