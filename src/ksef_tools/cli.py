@@ -62,6 +62,14 @@ def load_config(ctx: click.Context) -> Config:
 def main() -> None:
     import sys
 
+    # Force UTF-8 on stdout/stderr so non-ASCII characters (Polish diacritics)
+    # work even when the process is launched by external tools (e.g. 4D)
+    # that don't set PYTHONIOENCODING=utf-8.
+    if hasattr(sys.stdout, "reconfigure"):
+        sys.stdout.reconfigure(encoding="utf-8")
+    if hasattr(sys.stderr, "reconfigure"):
+        sys.stderr.reconfigure(encoding="utf-8")
+
     try:
         cli(standalone_mode=False)
     except click.exceptions.Abort:
